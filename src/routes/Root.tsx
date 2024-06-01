@@ -108,8 +108,7 @@ export default function Root() {
           metaMaskDisplay,
           updateMetaMask,
           updateMetaMaskDisplay,
-        }}
-        >
+        }}>
 
     <Container>
       <Body>

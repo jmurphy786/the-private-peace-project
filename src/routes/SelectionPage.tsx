@@ -6,6 +6,7 @@ import receive from '../assets/receive.png'
 
 import { Button } from "@nextui-org/react";
 import { useNavigate } from 'react-router-dom';
+
 export const CentreDiv = styled.div`
     display: flex;
     justify-content:center;

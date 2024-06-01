@@ -8,35 +8,76 @@ import { VerticalDiv } from "./components/SendToPool";
 import palestine from '../assets/palestine.jpg'
 import ukraine from '../assets/ukraine.png'
 import { useNavigate, useParams } from "react-router-dom";
-
+import {
+    Client,
+    useStreamMessages,
+    useClient,
+    useMessages,
+    useConversations,
+    useCanMessage,
+    useStartConversation,
+    InitializeClientOptions
+} from "@xmtp/react-sdk";
 
 interface ILocation {
     longitude: number;
     latitude: number;
 }
 
-type IParams  = {
-    id : string | undefined 
+type IParams = {
+    id: string | undefined
 }
+
 export default function ReceivingPage() {
-    const {id} = useParams<IParams>();
+    const { id } = useParams<IParams>();
+    // const { client, initialize } = useClient();
+    const { conversations } = useConversations();
+    const { startConversation } = useStartConversation();
+    const { canMessage } = useCanMessage();
+
     const [getLocation, setLocation] = useState<ILocation | null>();
 
     const [region, setRegion] = useState<LiquidityPool | null>(LiquidityPool.Ukraine);
     const navigate = useNavigate();
 
+    // const initXmtp = async () => {
+    //     const options = {
+    //         persistConversations: false,
+    //         env: "dev",
+    //     };
+    //     await initialize({ keys, options, signer } : InitializeClientOptions);
+    // };
+
+    // // Start a conversation with XMTP
+    // const add = "0x3F11b27F323b62B159D2642964fa27C46C841897";
+    // if (await canMessage(add)) {
+    //     const conversation = await startConversation(add, "hi");
+    // }
+
+    // //Stream messages
+    // const [history, setHistory] = useState(null);
+    // const { messages } = useMessages(conversation);
+    // // Stream messages
+    // const onMessage = useCallback((message) => {
+    //     setHistory((prevMessages) => {
+    //         const msgsnew = [...prevMessages, message];
+    //         return msgsnew;
+    //     });
+    // }, []);
+    // useStreamMessages(conversation, { onMessage });
+
+
     useEffect(() => {
         if (!id) {
             navigate('/receive-region');
         }
-        if(id)
+        if (id)
             setRegion(parseInt(id));
     }, [id])
 
     const moveToPage = (value: string) => {
         navigate("/" + value);
     }
-
 
     const palestineWallets = ['', ''];
     const ukraineWallets = ['', ''];

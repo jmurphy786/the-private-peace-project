@@ -17,7 +17,6 @@ export default function ReceivingRegionPage() {
                 <SidePanel>
                     <CentreDiv>
                         <div style={{ display: 'flex', flexDirection: 'column' }}>
-
                             <Button style={{ width: '300px', height: '200px', backgroundColor: 'black' }} onClick={() => navigate("/receive/" + LiquidityPool.Palestine)} isIconOnly aria-label="Like">
                                 <Image style={{ marginTop: '30px' }} src={palestine} alt="logo" />
                             </Button>

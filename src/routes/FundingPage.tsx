@@ -12,9 +12,8 @@ export  enum LiquidityPool {
 }
 
 export default function FundingPage() {
-
     const [getLiquidityPool, setLiquidityPool] = useState<LiquidityPool | null>(null);
-
+    
     return (
         <div style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%' }}>
             <HeaderText style={{ textAlign: 'center', marginTop: '20px' }}>Select a liquidity pool to donate to...</HeaderText>
