@@ -1,17 +1,19 @@
 import { CentreDiv, SidePanel } from "./SelectionPage";
 import styled from 'styled-components'
 import { HeaderText } from './Root';
-import { Image } from "@nextui-org/image";
-import { Button } from "@nextui-org/react";
+import { Button, Image, Input } from "@nextui-org/react";
 import palestine from '../assets/palestine.jpg'
 import ukraine from '../assets/ukraine.png'
 import { useState } from "react";
+import SendToPool from "./components/SendToPool";
+
+export  enum LiquidityPool {
+    Palestine,
+    Ukraine
+}
 
 export default function FundingPage() {
-    enum LiquidityPool {
-        Palestine,
-        Ukraine
-    }
+
     const [getLiquidityPool, setLiquidityPool] = useState<LiquidityPool | null>(null);
 
 
@@ -29,7 +31,7 @@ export default function FundingPage() {
                             </Button>
                             {
                                 getLiquidityPool === LiquidityPool.Palestine ?
-                                    <HeaderText style={{marginTop:'10px'}}>You have selected Palestine</HeaderText>
+                                    <SendToPool poolType={getLiquidityPool}/>
                                     :
                                     <div>
                                     </div>
@@ -45,7 +47,7 @@ export default function FundingPage() {
                             </Button>
                             {
                                 getLiquidityPool === LiquidityPool.Ukraine ?
-                                    <HeaderText style={{marginTop:'10px'}}>You have selected Ukraine</HeaderText>
+                                    <SendToPool poolType={getLiquidityPool}/>
                                     :
                                     <div>
                                     </div>

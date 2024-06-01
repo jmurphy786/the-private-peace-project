@@ -12,7 +12,7 @@ import Root from './routes/Root.tsx';
 import SelectionPage from './routes/SelectionPage.tsx';
 import Connect from './routes/Connect.tsx';
 import FundingPage from './routes/FundingPage.tsx';
-
+import ReceivingPage from './routes/ReceivingPage.tsx';
 
 
 const router = createBrowserRouter(createRoutesFromElements(
@@ -20,6 +20,7 @@ const router = createBrowserRouter(createRoutesFromElements(
     <Route index element={<Connect/>}></Route>
     <Route path = 'select' element={<SelectionPage/>}/>
     <Route path = 'funding' element={<FundingPage/>}/>
+    <Route path = 'receive' element={<ReceivingPage/>}/>
   </Route>
 ));
 

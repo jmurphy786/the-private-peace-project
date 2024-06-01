@@ -42,7 +42,7 @@ export default function SelectionPage() {
             <HeaderText style={{ textAlign: 'center', marginTop: '10px' }}>Receiver</HeaderText>
             <HeaderText style={{ textAlign: 'center', marginTop: '10px' }}>If you are someone from Ukraine / Palestine and are in need of funds, you are able to access funds generously denoted by anonymous users arround the world.</HeaderText>
                 <CentreDiv style={{marginTop:'120px'}}>
-                    <Button style={{ width: '200px', height: '200px' }} isIconOnly  onClick={() => moveToPage('funding')} color="secondary" aria-label="Like">
+                    <Button style={{ width: '200px', height: '200px' }} isIconOnly  onClick={() => moveToPage('receive')} color="secondary" aria-label="Like">
                         <Image style={{ marginTop: '30px' }} src={receive} alt="logo" />
                     </Button>
                 </CentreDiv>
