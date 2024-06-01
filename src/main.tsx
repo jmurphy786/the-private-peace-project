@@ -15,6 +15,7 @@ import FundingPage from './routes/FundingPage.tsx';
 import ReceivingPage from './routes/ReceivingPage.tsx';
 import App from './App.tsx';
 import { RecoilRoot } from 'recoil';
+import ReceivingRegionPage from './routes/ReceivingRegionPage.tsx';
 
 
 const router = createBrowserRouter(createRoutesFromElements(
@@ -22,7 +23,8 @@ const router = createBrowserRouter(createRoutesFromElements(
     <Route index element={<Connect/>}></Route>
     <Route path = 'select' element={<SelectionPage/>}/>
     <Route path = 'funding' element={<FundingPage/>}/>
-    <Route path = 'receive' element={<ReceivingPage/>}/>
+    <Route path = 'receive/:id?' element={<ReceivingPage/>}/>
+    <Route path = 'receive-region' element={<ReceivingRegionPage/>}/>
   </Route>
 ));
 

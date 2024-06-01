@@ -126,7 +126,7 @@ export default function Root() {
               {
                 connectText ? 
                 <Button color="secondary" style={{ marginRight: '20px', width:'160px' }} disabled={true} isIconOnly aria-label="Like" startContent={<Image style={{marginLeft:'-10px'}} width={40} height={40} src={meta} alt="logo" />}>
-                  {metaMask}
+                  {metaMaskDisplay}
                 </Button>
                 :
                 <Button color="secondary" style={{ marginRight: '20px' }}>

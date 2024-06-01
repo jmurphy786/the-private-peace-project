@@ -71,9 +71,9 @@ export default function SendToPool({ poolType }: ISendToPoolProps) {
     const navigate = useNavigate();
 
     const moveToPage = () => {
-        if(metaMask)
+        if (metaMask)
             navigate('/select');
-          else
+        else
             navigate("/");
     }
 
@@ -90,12 +90,12 @@ export default function SendToPool({ poolType }: ISendToPoolProps) {
                             <>
                                 <ModalHeader className="flex flex-col gap-1">Donation Successful</ModalHeader>
                                 <ModalBody>
-                                <p>
-                                    Thank you so much for your donation($)!
-                                </p>
+                                    <p>
+                                        Thank you so much for your donation($)!
+                                    </p>
                                 </ModalBody>
                                 <ModalFooter>
-                                    <Button color="danger" variant="light" onPress={() => {onClose(); moveToPage();}}>
+                                    <Button color="danger" variant="light" onPress={() => { onClose(); moveToPage(); }}>
                                         Close
                                     </Button>
                                 </ModalFooter>

@@ -7,14 +7,13 @@ import { useState } from "react";
 import SendToPool from "./components/SendToPool";
 
 export  enum LiquidityPool {
-    Palestine,
-    Ukraine
+    Palestine = 0,
+    Ukraine = 1
 }
 
 export default function FundingPage() {
 
     const [getLiquidityPool, setLiquidityPool] = useState<LiquidityPool | null>(null);
-
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%' }}>
