@@ -11,23 +11,24 @@ export interface ISendToPoolProps {
     poolType: LiquidityPool
 };
 
-export default function SendToPool({ poolType }: ISendToPoolProps) {
-    const VerticalDiv = styled.div`
-        display: flex;
-        flex-direction: column;
-        margin-top: 20px;
-    `
-  const {metaMask} = useContext(MetaMaskContext);
+export const VerticalDiv = styled.div`
+display: flex;
+flex-direction: column;
+margin-top: 20px;
+`
 
+export default function SendToPool({ poolType }: ISendToPoolProps) {
+
+    const { metaMask } = useContext(MetaMaskContext);
 
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
     const navigate = useNavigate();
 
     const moveToPage = () => {
-        if(metaMask)
+        if (metaMask)
             navigate('/select');
-          else
+        else
             navigate("/");
     }
 
@@ -44,12 +45,12 @@ export default function SendToPool({ poolType }: ISendToPoolProps) {
                             <>
                                 <ModalHeader className="flex flex-col gap-1">Donation Successful</ModalHeader>
                                 <ModalBody>
-                                <p>
-                                    Thank you so much for your donation($)!
-                                </p>
+                                    <p>
+                                        Thank you so much for your donation($)!
+                                    </p>
                                 </ModalBody>
                                 <ModalFooter>
-                                    <Button color="danger" variant="light" onPress={() => {onClose(); moveToPage();}}>
+                                    <Button color="danger" variant="light" onPress={() => { onClose(); moveToPage(); }}>
                                         Close
                                     </Button>
                                 </ModalFooter>
