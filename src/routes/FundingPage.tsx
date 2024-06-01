@@ -1,7 +1,6 @@
 import { CentreDiv, SidePanel } from "./SelectionPage";
-import styled from 'styled-components'
 import { HeaderText } from './Root';
-import { Button, Image, Input } from "@nextui-org/react";
+import { Button, Image } from "@nextui-org/react";
 import palestine from '../assets/palestine.jpg'
 import ukraine from '../assets/ukraine.png'
 import { useState } from "react";

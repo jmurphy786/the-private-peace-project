@@ -1,10 +1,11 @@
 import { LiquidityPool } from "../FundingPage";
 import styled from 'styled-components'
-import { Button, Image, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@nextui-org/react";
+import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@nextui-org/react";
 
 import { HeaderText } from "../Root";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { MetaMaskContext } from "../MetaMaskContext";
 
 export interface ISendToPoolProps {
     poolType: LiquidityPool
@@ -16,12 +17,18 @@ export default function SendToPool({ poolType }: ISendToPoolProps) {
         flex-direction: column;
         margin-top: 20px;
     `
+  const {metaMask} = useContext(MetaMaskContext);
+
+
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
     const navigate = useNavigate();
 
     const moveToPage = () => {
-      navigate("/");
+        if(metaMask)
+            navigate('/select');
+          else
+            navigate("/");
     }
 
     return (

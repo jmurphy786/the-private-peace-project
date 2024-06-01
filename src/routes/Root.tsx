@@ -1,9 +1,11 @@
 import styled from 'styled-components'
-import { Image } from "@nextui-org/image";
 import logo from '../assets/logo.png'
-import { Button } from "@nextui-org/react";
+import { Button, Image } from "@nextui-org/react";
 import { Outlet, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { RecoilRoot } from 'recoil';
+import { MetaMaskContext, defaultState } from './MetaMaskContext';
+import meta from '../assets/meta.jpg'
 
 export const MainGrid = styled.div`
   display: grid;
@@ -73,15 +75,42 @@ export const HeaderText = styled.p`
 `
 export default function Root() {
 
-  const [hasLoggedIn, setLoggedIn] = useState(false);
+  const [metaMask, setMetaMask] = useState(defaultState.metaMask);
+  const [metaMaskDisplay, setMetaMaskDisplay] = useState(defaultState.metaMaskDisplay);
 
+  const [connectText, setConnectText] = useState<string>("");
+
+  const updateMetaMask = (value : string) => {
+      setMetaMask(value);
+  };
+
+  const updateMetaMaskDisplay = (value : string) => {
+    setMetaMaskDisplay(value);
+};
+
+  useEffect(() => {
+    setConnectText(metaMask);
+  }, [metaMask])
   const navigate = useNavigate();
 
   const moveToPage = () => {
-    navigate("/");
+    if(metaMask)
+      navigate('/select');
+    else
+      navigate("/");
   }
 
   return (
+    <RecoilRoot>
+    <MetaMaskContext.Provider
+         value={{
+          metaMask,
+          metaMaskDisplay,
+          updateMetaMask,
+          updateMetaMaskDisplay,
+        }}
+        >
+
     <Container>
       <Body>
         <MainGrid>
@@ -94,9 +123,17 @@ export default function Root() {
               </Button>
             </TitleBar>
             <NavigationButtons>
-              <Button color="secondary" style={{ marginRight: '20px' }}>
-                Connect
+              {
+                connectText ? 
+                <Button color="secondary" style={{ marginRight: '20px', width:'160px' }} disabled={true} isIconOnly aria-label="Like" startContent={<Image style={{marginLeft:'-10px'}} width={40} height={40} src={meta} alt="logo" />}>
+                  {metaMask}
+                </Button>
+                :
+                <Button color="secondary" style={{ marginRight: '20px' }}>
+                  Connect
               </Button>
+              }
+
             </NavigationButtons>
           </Header>
           <CentrePage>
@@ -105,6 +142,8 @@ export default function Root() {
         </MainGrid>
       </Body>
     </Container>
+    </MetaMaskContext.Provider>
+  </RecoilRoot>
   )
 }
 
