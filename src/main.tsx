@@ -16,7 +16,7 @@ import ReceivingPage from './routes/ReceivingPage.tsx';
 import App from './App.tsx';
 import { RecoilRoot } from 'recoil';
 import ReceivingRegionPage from './routes/ReceivingRegionPage.tsx';
-
+import { XMTPProvider } from "@xmtp/react-sdk";
 
 const router = createBrowserRouter(createRoutesFromElements(
   <Route path='/' element={<Root/>}>
@@ -33,9 +33,11 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <RouterProvider router={router} />
     <NextUIProvider>
+    <XMTPProvider>
     <RecoilRoot>
       <App/>
     </RecoilRoot>
+    </XMTPProvider>
     </NextUIProvider>
   </React.StrictMode>,
 )

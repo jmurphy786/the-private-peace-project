@@ -2,22 +2,16 @@ import { CentreDiv } from "./SelectionPage";
 import { HeaderText } from './Root';
 import { Button, Image, Textarea } from "@nextui-org/react";
 import send from '../assets/send.png'
-import { useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { LiquidityPool } from "./FundingPage";
 import { VerticalDiv } from "./components/SendToPool";
 import palestine from '../assets/palestine.jpg'
 import ukraine from '../assets/ukraine.png'
 import { useNavigate, useParams } from "react-router-dom";
-import {
-    Client,
-    useStreamMessages,
-    useClient,
-    useMessages,
-    useConversations,
-    useCanMessage,
-    useStartConversation,
-    InitializeClientOptions
-} from "@xmtp/react-sdk";
+import { Client } from "@xmtp/xmtp-js";
+import { MetaMaskContext } from "./MetaMaskContext";
+import { Wallet, ethers } from 'ethers';
+
 
 interface ILocation {
     longitude: number;
@@ -30,42 +24,26 @@ type IParams = {
 
 export default function ReceivingPage() {
     const { id } = useParams<IParams>();
-    // const { client, initialize } = useClient();
-    const { conversations } = useConversations();
-    const { startConversation } = useStartConversation();
-    const { canMessage } = useCanMessage();
-
     const [getLocation, setLocation] = useState<ILocation | null>();
-
     const [region, setRegion] = useState<LiquidityPool | null>(LiquidityPool.Ukraine);
     const navigate = useNavigate();
+    const [xmtpVal, setXmtpVal] = useState<string>("")
 
-    // const initXmtp = async () => {
-    //     const options = {
-    //         persistConversations: false,
-    //         env: "dev",
-    //     };
-    //     await initialize({ keys, options, signer } : InitializeClientOptions);
-    // };
-
-    // // Start a conversation with XMTP
-    // const add = "0x3F11b27F323b62B159D2642964fa27C46C841897";
-    // if (await canMessage(add)) {
-    //     const conversation = await startConversation(add, "hi");
-    // }
-
-    // //Stream messages
-    // const [history, setHistory] = useState(null);
-    // const { messages } = useMessages(conversation);
-    // // Stream messages
-    // const onMessage = useCallback((message) => {
-    //     setHistory((prevMessages) => {
-    //         const msgsnew = [...prevMessages, message];
-    //         return msgsnew;
-    //     });
-    // }, []);
-    // useStreamMessages(conversation, { onMessage });
-
+    const DoStuff = async () => {
+        const provider = new ethers.providers.Web3Provider(window?.ethereum as any);
+        const signer = provider.getSigner();
+        const xmtp = await Client.create(signer, {env:'production'
+        });
+        const allConversations = await xmtp.conversations.list();
+        let getConversation = allConversations.filter(x => x.peerAddress === '0xaecc64a55d46551E410d3875201E9B8cd63827Eb');
+        let allMessages = await getConversation[0].messages();
+        setXmtpVal(allMessages[0].content as string)
+    }
+    useEffect(() => {
+        if (id !== undefined) {
+            DoStuff();
+        }
+    }, []);
 
     useEffect(() => {
         if (!id) {
@@ -73,11 +51,7 @@ export default function ReceivingPage() {
         }
         if (id)
             setRegion(parseInt(id));
-    }, [id])
-
-    const moveToPage = (value: string) => {
-        navigate("/" + value);
-    }
+    }, [id]);
 
     const palestineWallets = ['', ''];
     const ukraineWallets = ['', ''];
@@ -116,6 +90,7 @@ export default function ReceivingPage() {
                     label={<div style={{ display: 'flex', justifyContent: 'center', marginBottom: '10px' }}><HeaderText style={{ fontSize: '15px', marginBottom: '2px' }}>XMTP Message</HeaderText></div>}
                     labelPlacement="outside"
                     placeholder="Enter your description"
+                    value={xmtpVal}
                 />
 
                 <CentreDiv style={{ alignItems: 'end', justifyContent: 'end', marginTop: '10px' }}>
