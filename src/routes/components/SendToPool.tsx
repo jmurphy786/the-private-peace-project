@@ -8,7 +8,6 @@ import { MetaMaskContext } from "../MetaMaskContext";
 import { Contract, utils, BigNumber, providers } from "ethers";
 import { PPP_ABI, PPP_CONTRACT_ADDRESS } from "../../constants";
 import { buildMimc7 as buildMimc } from 'circomlibjs';
-const { ethereum } = window as any;
 
 export interface ISendToPoolProps {
     poolType: LiquidityPool
@@ -22,11 +21,11 @@ function toHexString(byteArray: Uint8Array): string {
 
 const depositClick = async () => {
     await deposit();
-    open()
+    // TODO handle transaction sending/feedback/closure
 }
 
 const deposit = async () => {
-    try {
+
     
         // Generate commitment for deposit function
         const nullifier = utils.randomBytes(32);
@@ -37,23 +36,24 @@ const deposit = async () => {
 
         const noteValue = BigNumber.from(noteHex).mod(BigNumber.from("21888242871839275222246405745257275088548364400416034343698204186575808495617")).toHexString();
 
-        const provider = new providers.Web3Provider(ethereum);
-        const signer = await provider.getSigner();
+        const provider = window.ethereum;
 
-        const PPPcontract = new Contract(
-            PPP_CONTRACT_ADDRESS,
-            PPP_ABI,
-            signer
-        );
-        const tx = await PPPcontract.deposit(noteValue,
-        {
-            value: utils.parseEther("0.01"),
-        });
+        const iface = new utils.Interface(PPP_ABI);
+        const functionData = iface.encodeFunctionData("deposit", [noteValue])
 
-        await tx.wait();
-    } catch (err) {
-        console.error(err);
-    }
+        if(provider)
+        provider.request({
+            method: "eth_sendTransaction",
+            params: [
+            {
+                // TODO replace "from" with connected metamask address
+                from: "0xA4831B989972605A62141a667578d742927Cbef9",
+                to: "0xc127cC043AF2c160c84e7eF26a3113F4f4283639",
+                value: "0x2386F26FC10000", // 0.01 
+                data: functionData,
+            },
+            ]
+        })
   };
 
   export const VerticalDiv = styled.div`
@@ -83,7 +83,7 @@ export default function SendToPool({ poolType }: ISendToPoolProps) {
             </div>
             <Input isReadOnly style={{ color: 'white' }} type='email' label={<HeaderText>Eth Donation</HeaderText>} color='secondary' variant="bordered" defaultValue="1" />
             <VerticalDiv style={{ alignItems: 'end' }}>
-                <Button style={{ marginTop: '20px', width: '90px' }} color='secondary' onPress={depositClick}> Donate ($)</Button>
+                <Button style={{ marginTop: '20px', width: '90px' }} color='secondary' onPress={depositClick}> Donate ETH</Button>
                 <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
                     <ModalContent>
                         {(onClose) => (
@@ -91,7 +91,7 @@ export default function SendToPool({ poolType }: ISendToPoolProps) {
                                 <ModalHeader className="flex flex-col gap-1">Donation Successful</ModalHeader>
                                 <ModalBody>
                                     <p>
-                                        Thank you so much for your donation($)!
+                                        Donation sent.
                                     </p>
                                 </ModalBody>
                                 <ModalFooter>
