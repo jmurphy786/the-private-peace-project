@@ -19,52 +19,48 @@ function toHexString(byteArray: Uint8Array): string {
     }).join('');
 }
 
-const depositClick = async () => {
-    await deposit();
+const depositClick = async (metamask: string, onOpen: () => void) => {
+    await deposit(metamask, onOpen);
     // TODO handle transaction sending/feedback/closure
 }
 
-const deposit = async () => {
+const deposit = async (metamask: string, onOpen: () => void) => {
+    // Generate commitment for deposit function
+    const nullifier = utils.randomBytes(32);
+    const secret = utils.randomBytes(32);
+    const mimc = await buildMimc();
+    const note = mimc.multiHash([nullifier, secret]);
+    const noteHex = toHexString(note);
 
-    
-        // Generate commitment for deposit function
-        const nullifier = utils.randomBytes(32);
-        const secret = utils.randomBytes(32);
-        const mimc = await buildMimc();
-        const note = mimc.multiHash([nullifier, secret]);
-        const noteHex = toHexString(note);
+    const noteValue = BigNumber.from(noteHex).mod(BigNumber.from("21888242871839275222246405745257275088548364400416034343698204186575808495617")).toHexString();
+    const provider = window.ethereum;
+    const iface = new utils.Interface(PPP_ABI);
+    const functionData = iface.encodeFunctionData("deposit", [noteValue])
 
-        const noteValue = BigNumber.from(noteHex).mod(BigNumber.from("21888242871839275222246405745257275088548364400416034343698204186575808495617")).toHexString();
-
-        const provider = window.ethereum;
-
-        const iface = new utils.Interface(PPP_ABI);
-        const functionData = iface.encodeFunctionData("deposit", [noteValue])
-
-        if(provider)
-        provider.request({
+    if (provider)
+        await provider.request({
             method: "eth_sendTransaction",
             params: [
-            {
-                // TODO replace "from" with connected metamask address
-                from: "0xA4831B989972605A62141a667578d742927Cbef9",
-                to: "0xc127cC043AF2c160c84e7eF26a3113F4f4283639",
-                value: "0x2386F26FC10000", // 0.01 
-                data: functionData,
-            },
+                {
+                    // TODO replace "from" with connected metamask address
+                    from: metamask,
+                    to: "0xc127cC043AF2c160c84e7eF26a3113F4f4283639",
+                    value: "0x2386F26FC10000", // 0.01 
+                    data: functionData,
+                },
             ]
         })
-  };
+    onOpen();
+};
 
-  export const VerticalDiv = styled.div`
+export const VerticalDiv = styled.div`
   display: flex;
   flex-direction: column;
   margin-top: 20px;
 `
 export default function SendToPool({ poolType }: ISendToPoolProps) {
 
-  const {metaMask} = useContext(MetaMaskContext);
-
+    const { metaMask } = useContext(MetaMaskContext);
 
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
@@ -81,9 +77,9 @@ export default function SendToPool({ poolType }: ISendToPoolProps) {
         <VerticalDiv>
             <div style={{ marginTop: '40px' }}>
             </div>
-            <Input isReadOnly style={{ color: 'white' }} type='email' label={<HeaderText>Eth Donation</HeaderText>} color='secondary' variant="bordered" defaultValue="1" />
+            <Input isReadOnly style={{ color: 'white' }} type='email' label={<HeaderText>Eth Donation</HeaderText>} color='secondary' variant="bordered" defaultValue="0.01" />
             <VerticalDiv style={{ alignItems: 'end' }}>
-                <Button style={{ marginTop: '20px', width: '90px' }} color='secondary' onPress={depositClick}> Donate ETH</Button>
+                <Button style={{ marginTop: '20px', width: '90px' }} color='secondary' onPress={() => depositClick(metaMask, onOpen)}> Donate ETH</Button>
                 <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
                     <ModalContent>
                         {(onClose) => (
